@@ -13,7 +13,7 @@ end
 M.list = function(opts)
   opts = vim.tbl_extend('force', {
     z_command_list = {vim.o.shell, '-c', 'z -l'},
-  }, opts)
+  }, opts or {})
   pickers.new(opts, {
     prompt_title = 'Visited directories from z',
     finder = finders.new_oneshot_job(opts.z_command_list, opts),
