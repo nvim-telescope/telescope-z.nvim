@@ -11,13 +11,12 @@ local function parse_entry(value)
 end
 
 M.list = function(opts)
-  opts = opts or {}
+  opts = vim.tbl_extend('force', {
+    z_command_list = {vim.o.shell, '-c', 'z -l'},
+  }, opts)
   pickers.new(opts, {
     prompt_title = 'Visited directories from z',
-    finder = finders.new_oneshot_job(
-      {vim.o.shell, '-c', 'z -l'},
-      opts
-    ),
+    finder = finders.new_oneshot_job(opts.z_command_list, opts),
     sorter = conf.file_sorter(opts),
     attach_mappings = function()
       actions.goto_file_selection_edit:replace(function(prompt_bufnr)
