@@ -1,4 +1,4 @@
-local conf = require'telescope.conf'.values
+local conf = require'telescope.config'.values
 local finders = require'telescope.finders'
 local pickers = require'telescope.pickers'
 
