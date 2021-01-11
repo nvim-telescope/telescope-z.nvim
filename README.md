@@ -29,5 +29,6 @@ List directories by `z -l`. When you input `<CR>`, it runs `builtin.find_files` 
 
 ## TODO
 
-* [ ] `cd` or `lcd` on the selected dir.
+* [x] `cd` or `lcd` on the selected dir.
 * [ ] Highlight results.
+* [ ] Customizable command for `z -l`.
