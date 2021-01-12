@@ -25,10 +25,16 @@ use{
 
 `:Telescope z list`
 
-List directories by `z -l`. When you input `<CR>`, it runs `builtin.find_files` on the directory.
+List directories by `z -l`. In default, it does actions below when you input keys.
+
+| key              | action               |
+|------------------|----------------------|
+| `<CR>` (edit)    | `builtin.find_files` |
+| `<C-x>` (split)  | `:chdir` to the dir  |
+| `<C-v>` (vsplit) | `:lchdir` to the dir |
 
 ## TODO
 
 * [x] `cd` or `lcd` on the selected dir.
-* [ ] Highlight results.
+* [x] Highlight results.
 * [ ] Customizable command for `z -l`.
