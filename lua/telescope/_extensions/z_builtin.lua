@@ -39,12 +39,12 @@ end
 
 M.list = function(opts)
   opts = vim.tbl_extend('force', {
-    z_command_list = {vim.o.shell, '-c', 'z -l'},
+    cmd = {vim.o.shell, '-c', 'z -l'},
     entry_maker = gen_from_z(opts),
   }, opts or {})
   pickers.new(opts, {
     prompt_title = 'Visited directories from z',
-    finder = finders.new_oneshot_job(opts.z_command_list, opts),
+    finder = finders.new_oneshot_job(opts.cmd, opts),
     sorter = conf.file_sorter(opts),
     previewer = previewers.cat.new(opts),
     attach_mappings = function(prompt_bufnr)
