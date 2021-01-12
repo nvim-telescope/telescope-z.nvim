@@ -5,6 +5,7 @@ local finders = require'telescope.finders'
 local from_entry = require'telescope.from_entry'
 local pickers = require'telescope.pickers'
 local previewers = require'telescope.previewers.term_previewer'
+local utils = require'telescope.utils'
 
 local M = {}
 
@@ -39,12 +40,18 @@ end
 
 M.list = function(opts)
   opts = vim.tbl_extend('force', {
-    cmd = {vim.o.shell, '-c', 'z -l'},
+    cmd = vim.o.shell.." -c 'z -l'",
     entry_maker = gen_from_z(opts),
   }, opts or {})
+
+  local results = vim.split(utils.get_os_command_output(opts.cmd), '\n')
+
   pickers.new(opts, {
     prompt_title = 'Visited directories from z',
-    finder = finders.new_oneshot_job(opts.cmd, opts),
+    finder = finders.new_table{
+      results = results,
+      entry_maker = gen_from_z(opts),
+    },
     sorter = conf.file_sorter(opts),
     previewer = previewers.cat.new(opts),
     attach_mappings = function(prompt_bufnr)
