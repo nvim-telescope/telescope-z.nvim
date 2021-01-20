@@ -39,18 +39,17 @@ local function gen_from_z(opts)
 end
 
 M.list = function(opts)
-  opts = vim.tbl_extend('force', {
-    cmd = vim.o.shell.." -c 'z -l'",
-    entry_maker = gen_from_z(opts),
-  }, opts or {})
-
-  local results = vim.split(utils.get_os_command_output(opts.cmd), '\n')
+  opts = opts or {}
+  opts.cmd = utils.get_default(opts.cmd, {vim.o.shell, '-c', 'z -l'})
+  opts.entry_maker = utils.get_lazy_default(opts.entry_maker, function()
+    return gen_from_z(opts)
+  end)
 
   pickers.new(opts, {
     prompt_title = 'Visited directories from z',
     finder = finders.new_table{
-      results = results,
-      entry_maker = gen_from_z(opts),
+      results = utils.get_os_command_output(opts.cmd),
+      entry_maker = opts.entry_maker,
     },
     sorter = conf.file_sorter(opts),
     previewer = previewers.cat.new(opts),
