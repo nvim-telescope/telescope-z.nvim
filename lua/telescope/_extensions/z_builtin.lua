@@ -60,9 +60,7 @@ M.list = function(opts)
   opts = opts or {}
   opts.cmd = utils.get_default(opts.cmd, {vim.o.shell, '-c', 'z -l'})
   opts.cwd = utils.get_lazy_default(opts.cwd, vim.fn.getcwd)
-  opts.entry_maker = utils.get_lazy_default(opts.entry_maker, function()
-    return gen_from_z(opts)
-  end)
+  opts.entry_maker = utils.get_lazy_default(opts.entry_maker, gen_from_z, opts)
 
   pickers.new(opts, {
     prompt_title = 'Visited directories from z',
