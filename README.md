@@ -33,8 +33,34 @@ List directories by `z -l`. In default, it does actions below when you input key
 | `<C-x>` (split)  | `:chdir` to the dir  |
 | `<C-v>` (vsplit) | `:lchdir` to the dir |
 
+#### options
+
+##### `cmd`
+
+Set command list to execute `z -l` or compatibles. In default, it does `bash -c 'z -l'` or so.
+
+Default value: `{vim.o.shell, '-c', 'z -l'}`
+
+#### `cwd`
+
+Transform the result paths into relative ones with this value as the base dir.
+
+Default value: `vim.fn.getcwd()`
+
+#### `tail_path`
+
+Show only basename of the path.
+
+Default value: `false`
+
+#### `shorten_path`
+
+Call `pathshorten()` for each path.
+
+Default value: `false`
+
 ## TODO
 
 * [x] `cd` or `lcd` on the selected dir.
 * [x] Highlight results.
-* [ ] Customizable command for `z -l`.
+* [x] Customizable command for `z -l`.
