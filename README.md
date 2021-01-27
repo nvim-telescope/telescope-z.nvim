@@ -11,7 +11,7 @@
 use{
   'nvim-telescope/telescope.nvim',
   requires = {
-    'delphinus/telescope-z.nvim',
+    'nvim-telescope/telescope-z.nvim',
   },
   config = function()
     require'telescope'.load_extension'z'
