@@ -8,15 +8,18 @@
 ## Installation
 
 ```lua
-use{
-  'nvim-telescope/telescope.nvim',
-  requires = {
-    'nvim-telescope/telescope-z.nvim',
-  },
+-- packer.nvim:
+use{ 'nvim-telescope/telescope.nvim' }
+use{ 'nvim-telescope/telescope-z.nvim',
   config = function()
-    require'telescope'.load_extension'z'
-  end,
+
+  end
 }
+-- paq-nvim:
+paq 'nvim-telescope/telescope.nvim'
+paq 'nvim-telescope/telescope-z.nvim'
+...
+require'telescope'.load_extension'z'
 ```
 
 ## Usage
