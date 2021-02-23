@@ -84,6 +84,9 @@ M.list = function(opts)
         elseif type == 'vertical' then
           vim.cmd('lcd '..dir)
           print('lchdir to '..dir)
+        elseif type == 'tab' then
+          vim.cmd('tcd '..dir)
+          print('tchdir to '..dir)
         end
       end)
       return true
