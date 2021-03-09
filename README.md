@@ -8,18 +8,32 @@
 ## Installation
 
 ```lua
-use{
-  'nvim-telescope/telescope.nvim',
+-- packer.nvim:
+use { 'nvim-telescope/telescope-z.nvim',
   requires = {
-    'nvim-telescope/telescope-z.nvim',
+    {'nvim-lua/plenary.nvim'},
+    {'nvim-lua/popup.nvim'},
+    {'nvim-telescope/telescope.nvim'},
   },
   config = function()
     require'telescope'.load_extension'z'
+    -- ... other telescope settings
   end,
 }
+...
+-- paq-nvim:
+paq 'nvim-lua/plenary.nvim'
+paq 'nvim-lua/popup.nvim'
+paq 'nvim-telescope/telescope.nvim'
+paq 'nvim-telescope/telescope-z.nvim'
+...
+require'telescope'.load_extension'z'
 ```
 
 ## Usage
+
+Set keybinding like `vim.api.nvim_set_keymap('n', '<leader>tez', [[<cmd>lua require'telescope'.extensions.z.list{}<CR>]], {noremap=true, silent=true})`
+and adapt the options listed below.
 
 ### list
 
