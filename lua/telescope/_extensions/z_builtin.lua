@@ -4,10 +4,10 @@ local conf = require'telescope.config'.values
 local entry_display = require'telescope.pickers.entry_display'
 local finders = require'telescope.finders'
 local from_entry = require'telescope.from_entry'
-local path = require'telescope.path'
 local pickers = require'telescope.pickers'
 local previewers = require'telescope.previewers.term_previewer'
 local utils = require'telescope.utils'
+local Path = require('plenary.path')
 
 local os_home = vim.loop.os_homedir()
 
@@ -30,9 +30,9 @@ local function gen_from_z(opts)
     elseif opts.shorten_path then
       dir = utils.path_shorten(original)
     else
-      dir = path.make_relative(original, opts.cwd)
+      dir = Path:new(original):make_relative(opts.cwd)
       if vim.startswith(dir, os_home) then
-        dir = '~/'..path.make_relative(dir, os_home)
+        dir = '~/'..Path:new(dir):make_relative(os_home)
       elseif dir ~= original then
         dir = './'..dir
       end
