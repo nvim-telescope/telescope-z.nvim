@@ -13,6 +13,15 @@ local os_home = vim.loop.os_homedir()
 
 local M = {}
 
+-- This func is borrowed from plenary.path.
+-- TODO: should make plenary.path#is_root() public?
+local function is_root(pathname)
+  if Path.path.sep == '\\' then
+    return string.match(pathname, '^[A-Z]:\\?$')
+  end
+  return pathname == '/'
+end
+
 local function gen_from_z(opts)
   local displayer = entry_display.create{
     separator = ' ',
@@ -23,18 +32,25 @@ local function gen_from_z(opts)
   }
 
   local function make_display(entry)
-    local original = entry.path
     local dir
-    if opts.tail_path then
-      dir = utils.path_tail(original)
-    elseif opts.shorten_path then
-      dir = utils.path_shorten(original)
+    if is_root(entry.path) then
+      dir = entry.path
     else
-      dir = Path:new(original):make_relative(opts.cwd)
-      if vim.startswith(dir, os_home) then
-        dir = '~/'..Path:new(dir):make_relative(os_home)
-      elseif dir ~= original then
-        dir = './'..dir
+      local original = Path:new(entry.path)
+      if opts.tail_path then
+        local parts = original:_split()
+        dir = parts[#parts]
+      elseif opts.shorten_path then
+        dir = original:shorten()
+      else
+        local relpath = Path:new(original):make_relative(opts.cwd)
+        local p
+        if vim.startswith(relpath, os_home) then
+          p = Path:new'~' / Path:new(relpath):make_relative(os_home)
+        elseif relpath.filename ~= original then
+          p = Path:new'.' / relpath
+        end
+        dir = p and p.filename or relpath
       end
     end
 
