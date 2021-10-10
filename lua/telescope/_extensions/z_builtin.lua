@@ -84,7 +84,7 @@ M.list = function(opts)
         actions.close(prompt_bufnr)
         local dir = from_entry.path(entry)
         if type == 'default' then
-          require'telescope.builtin'.find_files{cwd = dir}
+          require'telescope.builtin'.find_files{cwd = dir, hidden = true}
         elseif type == 'horizontal' then
           vim.cmd('cd '..dir)
           print('chdir to '..dir)
