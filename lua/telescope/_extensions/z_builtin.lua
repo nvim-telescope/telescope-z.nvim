@@ -1,5 +1,6 @@
 local actions = require'telescope.actions'
 local actions_set = require'telescope.actions.set'
+local actions_state = require'telescope.actions.state'
 local conf = require'telescope.config'.values
 local entry_display = require'telescope.pickers.entry_display'
 local finders = require'telescope.finders'
@@ -79,7 +80,7 @@ M.list = function(opts)
     previewer = previewers.cat.new(opts),
     attach_mappings = function(prompt_bufnr)
       actions_set.select:replace(function(_, type)
-        local entry = actions.get_selected_entry()
+        local entry = actions_state.get_selected_entry()
         actions.close(prompt_bufnr)
         local dir = from_entry.path(entry)
         if type == 'default' then
