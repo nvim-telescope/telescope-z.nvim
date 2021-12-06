@@ -81,11 +81,13 @@ M.list = function(opts)
     attach_mappings = function(prompt_bufnr)
       actions_set.select:replace(function(_, type)
         local entry = actions_state.get_selected_entry()
-        actions.close(prompt_bufnr)
         local dir = from_entry.path(entry)
         if type == 'default' then
           require'telescope.builtin'.find_files{cwd = dir, hidden = true}
-        elseif type == 'horizontal' then
+          return
+        end
+        actions.close(prompt_bufnr)
+        if type == 'horizontal' then
           vim.cmd('cd '..dir)
           print('chdir to '..dir)
         elseif type == 'vertical' then
