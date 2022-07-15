@@ -66,7 +66,7 @@ end
 
 M.list = function(opts)
   opts = opts or {}
-  local cmd = utils.get_default(opts.cmd, {vim.o.shell, '-c', 'z -l'})
+  local cmd = vim.F.if_nil(opts.cmd, {vim.o.shell, '-c', 'z -l'})
   opts.cwd = utils.get_lazy_default(opts.cwd, vim.loop.cwd)
   opts.entry_maker = utils.get_lazy_default(opts.entry_maker, gen_from_z, opts)
 
