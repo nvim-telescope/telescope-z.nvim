@@ -10,51 +10,49 @@ local previewers = require "telescope.previewers.term_previewer"
 local utils = require "telescope.utils"
 local Path = require "plenary.path"
 
-local os_home = vim.loop.os_homedir()
+local uv = vim.uv or vim.loop
 
 local M = {}
 
-local function gen_from_z(opts)
-  local displayer = entry_display.create {
-    separator = " ",
-    items = {
-      { width = 7, right_justify = true }, -- score
-      { remaining = true }, -- path
-    },
-  }
+local sep = Path.path.sep
+local home = (function(h)
+  return h .. (h:sub(-1) ~= sep and sep or "")
+end)(assert(Path.path.home))
+local basename_regex = (".*%s([^%s]+)"):format(sep, sep)
 
-  local function make_display(entry)
-    local dir = (function(path)
-      if path == Path.path.root() then
-        return path
-      end
-
-      local p = Path:new(path)
-      if opts.tail_path then
-        local parts = p:_split()
-        return parts[#parts]
-      end
-
-      if opts.shorten_path then
-        return p:shorten()
-      end
-
-      if vim.startswith(path, opts.cwd) and path ~= opts.cwd then
-        return Path:new(p):make_relative(opts.cwd)
-      end
-
-      if vim.startswith(path, os_home) then
-        return (Path:new "~" / p:make_relative(os_home)).filename
-      end
-      return path
-    end)(entry.path)
-
-    return displayer {
-      { ("%.2f"):format(entry.value), "TelescopeResultsIdentifier" },
-      dir,
-    }
+local function replace_home(path)
+  local start, finish = path:find(home, 1, true)
+  if start == 1 then
+    path = "~" .. sep .. path:sub(finish + 1, -1)
   end
+  return path
+end
 
+local function make_items(opts, path)
+  if path == Path.path.root() then
+    return { "", path }
+  end
+  local transformed = utils.transform_path(opts, path)
+  local replaced = replace_home(transformed)
+  local basename = replaced:match(basename_regex)
+  if not basename then
+    return { "", replaced }
+  end
+  local parent = replaced:sub(1, #replaced - #basename)
+  return { { parent, "Directory" }, basename }
+end
+
+local displayer = entry_display.create {
+  separator = "",
+  items = {
+    { width = 7, right_justify = true }, -- score
+    {}, -- separator
+    {}, -- directory
+    {}, -- basename
+  },
+}
+
+local function gen_from_z(opts)
   return function(line)
     local score_str, dir = line:match "([%.%d]+)%s+(.+)"
     local score = tonumber(score_str)
@@ -63,7 +61,15 @@ local function gen_from_z(opts)
       value = score,
       ordinal = dir,
       path = dir,
-      display = make_display,
+      display = function(entry)
+        local items = make_items(opts, entry.path)
+        return displayer {
+          { ("%.2f"):format(entry.value), "TelescopeResultsNumber" },
+          { " " },
+          items[1],
+          items[2],
+        }
+      end,
     }
   end
 end
@@ -73,6 +79,11 @@ M.list = function(opts)
   local cmd = vim.F.if_nil(opts.cmd, { vim.o.shell, "-c", "z -l" })
   opts.cwd = utils.get_lazy_default(opts.cwd, vim.loop.cwd)
   opts.entry_maker = utils.get_lazy_default(opts.entry_maker, gen_from_z, opts)
+  if opts.tail_path then
+    opts.path_display = { "tail" }
+  elseif opts.shorten_path then
+    opts.path_display = { "shorten" }
+  end
 
   pickers
     .new(opts, {
