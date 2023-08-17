@@ -7,37 +7,36 @@
 
 ## Installation
 
+### for lazy.nvim
+
 ```lua
--- packer.nvim:
-use { 'nvim-telescope/telescope-z.nvim',
-  requires = {
-    {'nvim-lua/plenary.nvim'},
-    {'nvim-lua/popup.nvim'},
-    {'nvim-telescope/telescope.nvim'},
-  },
+{
+  "nvim-telescope/telescope-z.nvim",
   config = function()
-    require'telescope'.load_extension'z'
-    -- ... other telescope settings
+    require("telescope").load_extension "z"
   end,
 }
-...
--- paq-nvim:
-paq 'nvim-lua/plenary.nvim'
-paq 'nvim-lua/popup.nvim'
-paq 'nvim-telescope/telescope.nvim'
-paq 'nvim-telescope/telescope-z.nvim'
-...
-require'telescope'.load_extension'z'
+```
+
+### for paq-nvim
+
+```lua
+paq "nvim-telescope/telescope-z.nvim"
+
+require("telescope").load_extension "z"
 ```
 
 ## Usage
 
-Set keybinding like `vim.api.nvim_set_keymap('n', '<leader>tez', [[<cmd>lua require'telescope'.extensions.z.list{}<CR>]], {noremap=true, silent=true})`
-and adapt the options listed below.
+```vim
+:Telescope z list
+```
 
-### list
+Or Lua way
 
-`:Telescope z list`
+```lua
+require("telescope").extensions.z.list {}
+```
 
 List directories by `z -l`. In default, it does actions below when you input keys.
 
@@ -54,13 +53,13 @@ List directories by `z -l`. In default, it does actions below when you input key
 
 Set command list to execute `z -l` or compatibles. In default, it does `bash -c 'z -l'` or so.
 
-Default value: `{vim.o.shell, '-c', 'z -l'}`
+Default value: `{ vim.o.shell, "-c", "z -l" }`
 
 #### `cwd`
 
 Transform the result paths into relative ones with this value as the base dir.
 
-Default value: `vim.fn.getcwd()`
+Default value: `vim.uv.cwd()`
 
 #### `tail_path`
 
@@ -73,9 +72,3 @@ Default value: `false`
 Call `pathshorten()` for each path.
 
 Default value: `false`
-
-## TODO
-
-* [x] `cd` or `lcd` on the selected dir.
-* [x] Highlight results.
-* [x] Customizable command for `z -l`.
