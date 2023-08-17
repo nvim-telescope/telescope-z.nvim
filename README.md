@@ -29,13 +29,13 @@ require("telescope").load_extension "z"
 ## Usage
 
 ```vim
-:Telescope z list
+:Telescope z
 ```
 
 Or Lua way
 
 ```lua
-require("telescope").extensions.z.list {}
+require("telescope").extensions.z.z {}
 ```
 
 List directories by `z -l`. In default, it does actions below when you input keys.
