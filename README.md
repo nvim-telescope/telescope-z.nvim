@@ -61,13 +61,17 @@ Transform the result paths into relative ones with this value as the base dir.
 
 Default value: `vim.uv.cwd()`
 
-#### `tail_path`
+#### `tail_path` (deprecated)
+
+***This is deprecated. Use `path_display` (`:h telescope.defaults.path_display`).***
 
 Show only basename of the path.
 
 Default value: `false`
 
-#### `shorten_path`
+#### `shorten_path` (deprecated)
+
+***This is deprecated. Use `path_display` (`:h telescope.defaults.path_display`).***
 
 Call `pathshorten()` for each path.
 
